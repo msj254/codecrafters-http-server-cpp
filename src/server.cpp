@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
   std::cerr << "Client Message (length: " << client_message.size() << ")" << std::endl;
   std::clog << client_message << std::endl;
   //std::string response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;
-  //std::string response = "HTTP/1.1 404 Not Found\r\n\r\n";
+  std::string response;
   std::string echo_str;
 
   if (client_message.starts_with("GET /echo"))
