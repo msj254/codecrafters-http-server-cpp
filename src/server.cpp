@@ -106,6 +106,8 @@ int main(int argc, char **argv) {
     int accept_found = client_message.substr(found+12).find("\r\n");
     accept_found = found + accept_found + 12;
     std::string usr_msg = client_message.substr(found+12,accept_found);
+    std::cout << found << "\n" << accept_found << "\n";
+    std::cout << usr_msg;
     std::stringstream usr_msg_size;
     usr_msg_size << usr_msg.size();
 
