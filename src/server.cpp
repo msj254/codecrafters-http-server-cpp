@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
         parsed2.push_back(temp);
     }
   echo_str = parsed2[1];
-  response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " << echo_str.size() << "\r\n\r\n" << echo_str;
+  response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " << std::to_string(echo_str.size()) << "\r\n\r\n" << echo_str;
   }
 
   else{std::string response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;}
