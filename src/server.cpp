@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
   int client_num = accept(server_fd, (struct sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
   std::cout << "Client connected\n";
   std::string message = "HTTP/1.1 200 OK\r\n\r\n";
-  send(client, message.c_str(), message.length(), 0);
+  send(client_num, message.c_str(), message.length(), 0);
 
 
   close(server_fd);
