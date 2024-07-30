@@ -7,6 +7,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <vector>
+#include <stringstream>
 
 int main(int argc, char **argv) {
   // Flush after every std::cout / std::cerr
@@ -69,7 +71,35 @@ int main(int argc, char **argv) {
   
   std::cerr << "Client Message (length: " << client_message.size() << ")" << std::endl;
   std::clog << client_message << std::endl;
-  std::string response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;
+  //std::string response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;
+  //std::string response = "HTTP/1.1 404 Not Found\r\n\r\n";
+  std::string echo_str;
+
+  if (client_message.starts_with("GET /echo"))
+  { 
+    std::vector <string> parsed;
+    std::stringstream t1(client_message);
+    std::string temp;
+
+    while(getline(t1, temp, ' '))
+    {
+        parsed.push_back(temp);
+    }
+
+    std::string echo_rep = parsed[1]; 
+    std::stringstream t2(echo_rep);
+    std::vector <string> parsed2;
+
+    while(getline(t2, temp, '/'))
+    {
+        parsed2.push_back(temp);
+    }
+  echo_str = parsed2[1];
+  response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " << echo_str.size() << "\r\n\r\n" << echo_str;
+  }
+
+  else{std::string response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;}
+
   ssize_t bsent = send(client_fd, response.c_str(), response.size(), 0);
 
   if (bsent < 0)
