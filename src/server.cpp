@@ -100,6 +100,17 @@ int main(int argc, char **argv) {
   response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + num.str() + "\r\n\r\n" + echo_str;
   }
 
+  else if (client_message.starts_with("GET /user-agent"))
+  {
+    int found = client_message.find("User-Agent:");
+    int accept_found = client_message.find("Accept:");
+    std::string usr_msg = client_message.substr(found+11,accept_found);
+    std::stringstream usr_msg_size;
+    usr_msg_size << usr_msg.size();
+
+    response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + usr_msg_size.str() + "\r\n\r\n" + echo_str;
+  }
+  
   else{response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;}
 
   ssize_t bsent = send(client_fd, response.c_str(), response.size(), 0);
