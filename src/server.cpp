@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 
   if (client_message.starts_with("GET /echo"))
   { 
-    std::vector <string> parsed;
+    std::vector <std::string> parsed;
     std::stringstream t1(client_message);
     std::string temp;
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
 
     std::string echo_rep = parsed[1]; 
     std::stringstream t2(echo_rep);
-    std::vector <string> parsed2;
+    std::vector <std::string> parsed2;
 
     while(getline(t2, temp, '/'))
     {
