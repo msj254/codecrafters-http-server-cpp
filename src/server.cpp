@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
   else if (client_message.starts_with("GET /user-agent"))
   {
     int found = client_message.find("User-Agent:");
-    int accept_found = client_message.find("\r\n");
+    int accept_found = client_message.substr(found).find("\r\n");
     std::string usr_msg = client_message.substr(found+12,accept_found);
     std::stringstream usr_msg_size;
     usr_msg_size << usr_msg.size();
