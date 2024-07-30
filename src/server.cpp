@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
   {
     int found = client_message.find("User-Agent:");
     int accept_found = client_message.find("Accept:");
-    std::string usr_msg = client_message.substr(found+11,accept_found);
+    std::string usr_msg = client_message.substr(found+11);
     std::stringstream usr_msg_size;
     usr_msg_size << usr_msg.size();
 
