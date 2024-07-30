@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
     {
         parsed2.push_back(temp);
     }
-  echo_str = parsed2[1];
+  echo_str = parsed2[2];
   std::stringstream num; 
   num << echo_str.size();
   response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + num.str() + "\r\n\r\n" + echo_str;
