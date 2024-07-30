@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
     std::stringstream usr_msg_size;
     usr_msg_size << usr_msg.size();
 
-    response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + usr_msg_size.str() + "\r\n\r\n" + echo_str;
+    response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + usr_msg_size.str() + "\r\n\r\n" + usr_msg;
   }
   
   else{response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;}
