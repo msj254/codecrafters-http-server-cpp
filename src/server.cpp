@@ -92,7 +92,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
 
   else if (client_message.starts_with("POST /file"))
   {
-    int content = client_message.find("Content-Length:")
+    int content = client_message.find("Content-Length:");
     std::string content_num = client_message.substr(content+16,1);
     int content_length = stoi(content_num);
     std::string request_body = client_message.substr(client_message.size()-content_length,content_length);
@@ -101,7 +101,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
     int found = client_message.find("/file");
     std::string filename = client_message.substr(found, (found_file-1)-(found));
     //combine dir and filename
-    ofstream request_file(filename);
+    std::ofstream request_file(filename);
     request_file << request_body;
     request_file.close();
 
