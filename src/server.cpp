@@ -71,7 +71,6 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
     int found_file = client_message.find("HTTP");
     int found = client_message.find("/file");
     std::string filename = client_message.substr(found+7, (found_file-1)-(found+7));
-    std::cout << "filename: " << dir << filename << std::endl;
     std::ifstream request_file(dir+filename);
     std::string file_message;
     std::string temp;
@@ -80,11 +79,8 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
     if (request_file.good())
     {
       while(getline(request_file,temp)){
-        //file_message = file_message + temp + "\n";  
         file_message = file_message + temp;  
-
       }
-      //std::cout << "file_messages:" << file_message;
       request_file.close();
       file_size << file_message.size();
       response = "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + file_size.str() + "\r\n\r\n" + file_message;
