@@ -99,11 +99,14 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
 
     int found_file = client_message.find("HTTP");
     int found = client_message.find("/file");
-    std::string filename = client_message.substr(found, (found_file-1)-(found));
+    std::string filename = client_message.substr(found+7, (found_file-1)-(found+7));
     //combine dir and filename
-    std::ofstream request_file(filename);
+    std::ofstream request_file("/files/" + filename);
+    std::ofstream request_file_to_disk(dir+filename);
     request_file << request_body;
+    request_file_to_disk << request_body;
     request_file.close();
+    request_file_to_disk.close();
 
     response = "HTTP/1.1 201 Created\r\n\r\n";
     //
