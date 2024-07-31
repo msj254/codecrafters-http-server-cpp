@@ -12,7 +12,7 @@
 #include <bits/stdc++.h>
 #include <thread>
 
-int handle_request(int client_fd, struct sockaddr_in client_addr)
+int handle_request(int client_fd, struct sockaddr_in client_addr, std::string dir)
 {
   std::string client_message(1024, '\0');
 
@@ -72,7 +72,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr)
     int found = client_message.find("/file");
     std::string filename = client_message.substr(found, (found_file-1)-(found));
     std::cout << "filename: " << filename << std::endl;
-    std::ifstream request_file(filename);
+    std::ifstream request_file(dir+filename);
     std::string file_message;
     std::string temp;
     std::stringstream file_size;
@@ -114,6 +114,11 @@ int main(int argc, char **argv) {
   // You can use print statements as follows for debugging, they'll be visible when running tests.
   std::cout << "Logs from your program will appear here!\n";
 
+  std::string dir;
+  if (argc == 3 && strcmp(argv[1], "--directory") == 0)
+  {
+  	dir = argv[2];
+  }
   //Uncomment this block to pass the first stage
   
   int server_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -156,7 +161,7 @@ int main(int argc, char **argv) {
   while(1){
   client_fd = accept(server_fd, (struct sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
   std::cout << "Client connected\n";
-  std::thread th(handle_request, client_fd, client_addr);
+  std::thread th(handle_request, client_fd, client_addr,dir);
   th.detach();
   }
 
