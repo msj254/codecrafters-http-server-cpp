@@ -76,14 +76,14 @@ int handle_request(int client_fd, struct sockaddr_in client_addr)
     std::string temp;
     std::stringstream file_size;
 
-    if (!request_file.is_open()){response = "HTTP/1.1 404 Not Found\r\n\r\n"; std::cout << "non existant file";}
+    if (!request_file.is_open()){response = "HTTP/1.1 404 Not Found\r\n\r\n"; }//std::cout << "non existant file";}
 
     else
     {
       while(getline(request_file,temp)){
         file_message = file_message + temp + "\n";  
       }
-      std::cout << "file_messages:" << file_message;
+      //std::cout << "file_messages:" << file_message;
       request_file.close();
       file_size << file_message.size();
       response = "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + file_size.str() + "\r\n\r\n" + file_message;
