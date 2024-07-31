@@ -83,6 +83,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr)
       while(getline(request_file,temp)){
         file_message = file_message + temp + "\n";  
       }
+      std::cout << "file_messages:" << file_message;
       request_file.close();
       file_size << file_message.size();
       response = "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + file_size.str() + "\r\n\r\n" + file_message;
