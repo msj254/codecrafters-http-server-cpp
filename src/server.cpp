@@ -11,7 +11,7 @@
 #include <bits/stdc++.h>
 #include <thread>
 
-void handle_request(int client_fd, struct sockaddr_in client_addr)
+int handle_request(int client_fd, struct sockaddr_in client_addr)
 {
   std::string client_message(1024, '\0');
 
