@@ -109,7 +109,8 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
     request_file_to_disk.close();
 
     response = "HTTP/1.1 201 Created\r\n\r\n";
-    std::cout << "request body       : " << request_body << std::endl << std::endl << std::endl;
+    //std::cout << "request body       : " << request_body << std::endl << std::endl << std::endl;
+    std::cout << client_message;
     //
   }
 
