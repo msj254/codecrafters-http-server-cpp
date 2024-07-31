@@ -70,7 +70,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr)
   else if (client_message.starts_with("GET /file")){
     int found_file = client_message.find("HTTP");
     int found = client_message.find("/file");
-    std::string filename = client_message.substr(found+2, (found_file-2)-(found+2));
+    std::string filename = client_message.substr(found+6, (found_file-2)-(found+6));
     std::cout << "filename: " << filename << std::endl;
     std::ifstream request_file(filename);
     std::string file_message;
