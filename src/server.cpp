@@ -80,7 +80,9 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
     if (request_file.good())
     {
       while(getline(request_file,temp)){
-        file_message = file_message + temp + "\n";  
+        //file_message = file_message + temp + "\n";  
+        file_message = file_message + temp;  
+
       }
       //std::cout << "file_messages:" << file_message;
       request_file.close();
