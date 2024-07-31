@@ -96,7 +96,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
     std::string content_num = client_message.substr(content+16,1);
     int content_length = stoi(content_num);
     std::string request_body = client_message.substr(client_message.size()-content_length,content_length);
-    std::cout << request_body << std::endl;
+    std::cout << "request body: " << request_body << std::endl;
     int found_file = client_message.find("HTTP");
     int found = client_message.find("/file");
     std::string filename = client_message.substr(found+7, (found_file-1)-(found+7));
