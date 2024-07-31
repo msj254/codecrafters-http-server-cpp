@@ -93,7 +93,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
   else if (client_message.starts_with("POST /file"))
   {
     int content = client_message.find("Content-Length:");
-    std::string content_num = client_message.substr(content+16,1);
+    std::string content_num = client_message.substr(content+17,1);
     int content_length = stoi(content_num);
     std::string request_body = client_message.substr(content+21,content_length);
     
