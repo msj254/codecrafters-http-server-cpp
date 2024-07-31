@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <string>
 #include <cstring>
@@ -65,7 +66,30 @@ int handle_request(int client_fd, struct sockaddr_in client_addr)
 
     response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + usr_msg_size.str() + "\r\n\r\n" + usr_msg;
   }
-  
+
+  else if (client_message.starts_with("GET /file")){
+    int found_file = client_message.find("HTTP");
+    int found = client_message.find("/file");
+    std::string filename = client_message.substr(found+2, (found_file-1)-(found-2));
+    std::ifstream request_file(filename);
+    std::string file_message;
+    std::string temp;
+    std::stringstream file_size;
+
+    if (!request_file.is_open()){response = "HTTP/1.1 404 Not Found\r\n\r\n"}
+
+    else
+    {
+      while(getline(request_file,temp)){
+        file_message = file_message + temp + std::endl;  
+      }
+      ifstream.close();
+      file_size << file_message.size();
+      response = "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + file_size.str() + "\r\n\r\n" + file_message;
+    }
+
+  }
+
   else{response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;}
 
   ssize_t bsent = send(client_fd, response.c_str(), response.size(), 0);
