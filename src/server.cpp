@@ -9,6 +9,7 @@
 #include <netdb.h>
 #include <vector>
 #include <bits/stdc++.h>
+#include <thread>
 
 int main(int argc, char **argv) {
   // Flush after every std::cout / std::cerr
@@ -55,9 +56,22 @@ int main(int argc, char **argv) {
   
   std::cout << "Waiting for a client to connect...\n";
   
-  int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
-  std::cout << "Client connected\n";
+  int client_fd = 0;
 
+  while(1){
+  client_fd = accept(server_fd, (struct sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
+  std::cout << "Client connected\n";
+  std::thread th(handle_request, client_fd, client_addr);
+  th.detach();
+  }
+
+  close(server_fd);
+  return 0;
+
+}
+
+void handle_request(int client_fd, struct sockaddr_in client_addr)
+{
   std::string client_message(1024, '\0');
 
   ssize_t brecvd = recv(client_fd, (void *)&client_message[0], client_message.max_size(), 0);
@@ -65,13 +79,11 @@ int main(int argc, char **argv) {
   {
     std::cerr << "error receiving message from client\n";
     close(client_fd);
-    close(server_fd);
     return 1;
   }
   
   std::cerr << "Client Message (length: " << client_message.size() << ")" << std::endl;
   std::clog << client_message << std::endl;
-  //std::string response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;
   std::string response;
   std::string echo_str;
 
@@ -94,6 +106,7 @@ int main(int argc, char **argv) {
     {
         parsed2.push_back(temp);
     }
+
   echo_str = parsed2[2];
   std::stringstream num; 
   num << echo_str.size();
@@ -106,8 +119,6 @@ int main(int argc, char **argv) {
     int accept_found = client_message.substr(found+12).find("\r\n");
     accept_found = found + accept_found + 12;
     std::string usr_msg = client_message.substr(found+12,accept_found-(found+12));
-    //std::cout << found << "\n" << accept_found << "\n";
-    //std::cout << "usr_msg: " << usr_msg << "end." << "\n";
     std::stringstream usr_msg_size;
     usr_msg_size << usr_msg.size();
 
@@ -122,12 +133,8 @@ int main(int argc, char **argv) {
   {
     std::cerr << "error sending response to client\n";
     close(client_fd);
-    close(server_fd);
     return 1;
   }
-
   close(client_fd);
-  close(server_fd);
   return 0;
-
 }
