@@ -76,7 +76,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr)
     std::string temp;
     std::stringstream file_size;
 
-    if (!request_file.is_open()){response = "HTTP/1.1 404 Not Found\r\n\r\n"; std::cout << "non existant file"}
+    if (!request_file.is_open()){response = "HTTP/1.1 404 Not Found\r\n\r\n"; std::cout << "non existant file";}
 
     else
     {
