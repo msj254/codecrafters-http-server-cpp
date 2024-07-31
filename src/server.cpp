@@ -90,6 +90,26 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
 
   }
 
+  else if (client_message.starts_with("POST /file"))
+  {
+    int content = client_message.find("Content-Length:")
+    std::string content_num = client_message.substr(content+16,1);
+    int content_length = stoi(content_num);
+    std::string request_body = client_message.substr(client_message.size()-content_length,content_length);
+
+    int found_file = client_message.find("HTTP");
+    int found = client_message.find("/file");
+    std::string filename = client_message.substr(found, (found_file-1)-(found));
+    //combine dir and filename
+    ofstream request_file(filename);
+    request_file << request_body;
+    request_file.close();
+
+    response = "HTTP/1.1 201 Created\r\n\r\n";
+    //
+  }
+
+
   else{response = client_message.starts_with("GET / HTTP/1.1\r\n") ? "HTTP/1.1 200 OK\r\n\r\n" : "HTTP/1.1 404 Not Found\r\n\r\n" ;}
 
   ssize_t bsent = send(client_fd, response.c_str(), response.size(), 0);
