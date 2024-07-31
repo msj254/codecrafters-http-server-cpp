@@ -71,7 +71,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
     int found_file = client_message.find("HTTP");
     int found = client_message.find("/file");
     std::string filename = client_message.substr(found, (found_file-1)-(found));
-    std::cout << "filename: " << filename << std::endl;
+    std::cout << "filename: " << dir << filename << std::endl;
     std::ifstream request_file(dir+filename);
     std::string file_message;
     std::string temp;
