@@ -17,7 +17,7 @@ std::string gzip_compress(const std::string &data) {
     z_stream zs;
     memset(&zs, 0, sizeof(zs));
     if (deflateInit2(&zs, Z_BEST_COMPRESSION, Z_DEFLATED, 15 + 16, 8, Z_DEFAULT_STRATEGY) != Z_OK) {
-        throw runtime_error("deflateInit2 failed while compressing.");
+        throw std::runtime_error("deflateInit2 failed while compressing.");
     }
     zs.next_in = (Bytef *)data.data();
     zs.avail_in = data.size();
@@ -34,7 +34,7 @@ std::string gzip_compress(const std::string &data) {
     } while (ret == Z_OK);
     deflateEnd(&zs);
     if (ret != Z_STREAM_END) {
-        throw std::runtime_error("Exception during zlib compression: (" + to_string(ret) + ") " + zs.msg);
+        throw std::runtime_error("Exception during zlib compression: (" + std::to_string(ret) + ") " + zs.msg);
     }
     return outstring;
 }
