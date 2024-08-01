@@ -31,28 +31,21 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
 
   if (client_message.starts_with("GET /echo"))
   { 
-    std::vector <std::string> parsed;
-    std::stringstream t1(client_message);
-    std::string temp;
+   int found = client_message.find("/echo");
+   int f_http = client.message.find("HTTP");
+   std::string echo_msg = client_message.substr(found+7,(f_http-1)-(found+7));
+   std::stringstream echo_msg_size;
+   echo_msg_size << echo_msg.size();
 
-    while(getline(t1, temp, ' '))
-    {
-        parsed.push_back(temp);
-    }
+   if (client_message.find("Accept-Encoding")!=client_message.size())
+   {
+      if (client_message.find("gzip")!=client_message.size()) 
+          {response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\n\r\n";}
 
-    std::string echo_rep = parsed[1]; 
-    std::stringstream t2(echo_rep);
-    std::vector <std::string> parsed2;
+      else {response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n";}
+   }
 
-    while(getline(t2, temp, '/'))
-    {
-        parsed2.push_back(temp);
-    }
-
-  echo_str = parsed2[2];
-  std::stringstream num; 
-  num << echo_str.size();
-  response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + num.str() + "\r\n\r\n" + echo_str;
+    else {response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + echo_msg_size.str() + "\r\n\r\n" + echo_msg;}   
   }
 
   else if (client_message.starts_with("GET /user-agent"))
@@ -90,6 +83,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
 
   }
 
+  //lots of magic number
   else if (client_message.starts_with("POST /file"))
   {
     int content = client_message.find("Content-Length:");
