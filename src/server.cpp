@@ -11,6 +11,33 @@
 #include <vector>
 #include <bits/stdc++.h>
 #include <thread>
+#include <zlib.h>
+
+string gzip_compress(const string &data) {
+    z_stream zs;
+    memset(&zs, 0, sizeof(zs));
+    if (deflateInit2(&zs, Z_BEST_COMPRESSION, Z_DEFLATED, 15 + 16, 8, Z_DEFAULT_STRATEGY) != Z_OK) {
+        throw runtime_error("deflateInit2 failed while compressing.");
+    }
+    zs.next_in = (Bytef *)data.data();
+    zs.avail_in = data.size();
+    int ret;
+    char outbuffer[32768];
+    string outstring;
+    do {
+        zs.next_out = reinterpret_cast<Bytef *>(outbuffer);
+        zs.avail_out = sizeof(outbuffer);
+        ret = deflate(&zs, Z_FINISH);
+        if (outstring.size() < zs.total_out) {
+            outstring.append(outbuffer, zs.total_out - outstring.size());
+        }
+    } while (ret == Z_OK);
+    deflateEnd(&zs);
+    if (ret != Z_STREAM_END) {
+        throw runtime_error("Exception during zlib compression: (" + to_string(ret) + ") " + zs.msg);
+    }
+    return outstring;
+}
 
 int handle_request(int client_fd, struct sockaddr_in client_addr, std::string dir)
 {
@@ -44,7 +71,12 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
    if (client_message.find("Accept-Encoding")!=std::string::npos)
    {
       if (client_message.find("gzip")!=std::string::npos) 
-          {response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\n\r\n";}
+          {
+            std::string gzip_msg = gzip_compress(echo_msg);
+            std::stringstream compress_length;
+            compress_length << gzip_msg.size();
+            response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + compress_length.size()  "\r\n\r\n" + gzip_msg;
+          }
 
       else {response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n";}
    }
