@@ -32,7 +32,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
   if (client_message.starts_with("GET /echo"))
   { 
    int found = client_message.find("/echo");
-   int f_http = client.message.find("HTTP");
+   int f_http = client_message.find("HTTP");
    std::string echo_msg = client_message.substr(found+7,(f_http-1)-(found+7));
    std::stringstream echo_msg_size;
    echo_msg_size << echo_msg.size();
