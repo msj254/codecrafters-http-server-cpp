@@ -33,14 +33,14 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
   { 
    int found = client_message.find("/echo");
    int f_http = client_message.find("HTTP");
-   std::string echo_msg = client_message.substr(found+7,(f_http-1)-(found+7));
+   std::string echo_msg = client_message.substr(found+6,(f_http-1)-(found+6));
    std::stringstream echo_msg_size;
    echo_msg_size << echo_msg.size();
 
     //std::cout << "ENCODING: " << client_message.find("gzip") << std::endl;
     //std::cout << "INVALID: " << client_message.find("invalid") << std::endl;
     //std::cout << "SIZE: " << client_message.size() << std::endl;
-    
+
    if (client_message.find("Accept-Encoding")!=std::string::npos)
    {
       if (client_message.find("gzip")!=std::string::npos) 
