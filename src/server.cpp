@@ -34,7 +34,7 @@ std::string gzip_compress(const std::string &data) {
     } while (ret == Z_OK);
     deflateEnd(&zs);
     if (ret != Z_STREAM_END) {
-        throw runtime_error("Exception during zlib compression: (" + to_string(ret) + ") " + zs.msg);
+        throw std::runtime_error("Exception during zlib compression: (" + to_string(ret) + ") " + zs.msg);
     }
     return outstring;
 }
@@ -75,7 +75,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
             std::string gzip_msg = gzip_compress(echo_msg);
             std::stringstream compress_length;
             compress_length << gzip_msg.size();
-            response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + compress_length.str()  "\r\n\r\n" + gzip_msg;
+            response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + compress_length.str() +  "\r\n\r\n" + gzip_msg;
           }
 
       else {response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n";}
