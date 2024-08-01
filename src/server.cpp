@@ -39,6 +39,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
 
    if (client_message.find("Accept-Encoding")!=client_message.size())
    {
+    std::cout << "ENCODING: " << client_message.find("gzip");
       if (client_message.find("gzip")!=client_message.size()) 
           {response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\n\r\n";}
 
