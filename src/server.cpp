@@ -13,7 +13,7 @@
 #include <thread>
 #include <zlib.h>
 
-string gzip_compress(const string &data) {
+std::string gzip_compress(const std::string &data) {
     z_stream zs;
     memset(&zs, 0, sizeof(zs));
     if (deflateInit2(&zs, Z_BEST_COMPRESSION, Z_DEFLATED, 15 + 16, 8, Z_DEFAULT_STRATEGY) != Z_OK) {
@@ -23,7 +23,7 @@ string gzip_compress(const string &data) {
     zs.avail_in = data.size();
     int ret;
     char outbuffer[32768];
-    string outstring;
+    std::string outstring;
     do {
         zs.next_out = reinterpret_cast<Bytef *>(outbuffer);
         zs.avail_out = sizeof(outbuffer);
@@ -75,7 +75,7 @@ int handle_request(int client_fd, struct sockaddr_in client_addr, std::string di
             std::string gzip_msg = gzip_compress(echo_msg);
             std::stringstream compress_length;
             compress_length << gzip_msg.size();
-            response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + compress_length.size()  "\r\n\r\n" + gzip_msg;
+            response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + compress_length.str()  "\r\n\r\n" + gzip_msg;
           }
 
       else {response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n";}
